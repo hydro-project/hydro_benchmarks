@@ -1,0 +1,18 @@
+[package]
+name = "hydro_local_benchmarks"
+publish = false
+version = "0.0.0"
+edition = "2021"
+
+#[dependencies]
+# make sure to sync these to `flow_macro`!
+
+[dev-dependencies]
+criterion = { version = "0.4"}
+rand = { version = "0.8.5"}
+base = { path = "../base"}
+hydroflow_base = { path = "../hydroflow_base"}
+
+[[bench]]
+name = "kmeans"
+harness = false

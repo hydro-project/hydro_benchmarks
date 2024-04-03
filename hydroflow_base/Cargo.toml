@@ -1,0 +1,22 @@
+[package]
+name = "hydroflow_base"
+publish = false
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0.29", features = [ "derive" ] }
+hydroflow = { git = "https://github.com/hydro-project/hydroflow" }
+serde = { version = "1", features = [ "derive" ] }
+chrono = { version = "0.4.20", features = [ "serde" ], default-features = true }
+base = {path="../base"}
+tokio = { version = "1.16", features = [ "full" ] }
+
+[dev-dependencies]
+#criterion = { version = "0.4"}
+#rand = { version = "0.8.5"}
+tokio = { version = "1.16", features = [ "full", "test-util" ] }
+
+#[[bench]]
+#name = "kmeans_baseline"
+#harness = false
