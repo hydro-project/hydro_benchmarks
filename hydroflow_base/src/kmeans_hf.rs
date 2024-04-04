@@ -11,7 +11,7 @@ pub fn kmeans_hf(points: Vec<Point>, k: usize, _max_iterations: usize, tolerance
 
     let centroids_init = [points[0..k].to_vec()];
 
-    //let (output_send, mut _output_recv) = hydroflow::util::unsync::mpsc::channel::<Vec<usize>>(None);
+    let (output_send, output_recv) = hydroflow::util::unbounded_channel::<Vec<usize>>();
     
     let mut flow: Hydroflow = hydroflow_syntax! {
         // Input points
@@ -55,7 +55,7 @@ pub fn kmeans_hf(points: Vec<Point>, k: usize, _max_iterations: usize, tolerance
         // TODO: Implement variable number of iterations per tick
         iteration_end = has_converged
             -> enumerate::<'static>()
-            -> inspect(|(iteration, (has_converged, _, _))| println!("Iteration: {:?}, Converged: {:?}", iteration, has_converged))
+            //-> inspect(|(iteration, (has_converged, _, _))| println!("Iteration: {:?}, Converged: {:?}", iteration, has_converged))
             -> partition(|(iteration, (has_converged, _, _)): &(i32, (bool, _, _)), [result, iterate]| {
             match ((*iteration)+1, has_converged) {
                 (_, true) => result,
@@ -71,16 +71,16 @@ pub fn kmeans_hf(points: Vec<Point>, k: usize, _max_iterations: usize, tolerance
         clusters = iteration_end[result] -> map(|(_, (_, centroids, clusters))| (centroids, clusters));
 
         clusters
-            -> inspect(|(centroids, clusters)| println!("Centroids: {:?}, Clusters: {:?}", centroids, clusters))
+            //-> inspect(|(centroids, clusters)| println!("Centroids: {:?}, Clusters: {:?}", centroids, clusters))
             -> map(|(_, clusters)| clusters)
-            //-> dest_sink(output_send);
-            -> null();
+            -> for_each(|clusters| output_send.send(clusters).unwrap());
     };
 
     // run the server
     flow.run_available();
-    // TODO: receive output
-    let res = vec![0, 1, 2];
+    let res = hydroflow::util::collect_ready::<Vec<Vec<usize>>,_>(output_recv);
 
-    return res;
+    assert!(res.len() == 1);
+
+    return res[0].clone();
 }

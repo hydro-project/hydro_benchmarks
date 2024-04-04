@@ -336,6 +336,9 @@ dependencies = [
 [[package]]
 name = "base"
 version = "0.0.0"
+dependencies = [
+ "itertools 0.12.1",
+]
 
 [[package]]
 name = "bincode"
@@ -682,7 +685,7 @@ dependencies = [
  "ciborium",
  "clap 3.2.25",
  "criterion-plot",
- "itertools",
+ "itertools 0.10.5",
  "lazy_static",
  "num-traits",
  "oorandom",
@@ -703,7 +706,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6b50826342786a51a89e2da3a28f1c32b06e387201bc2d19791f622c673706b1"
 dependencies = [
  "cast",
- "itertools",
+ "itertools 0.10.5",
 ]
 
 [[package]]
@@ -1228,7 +1231,7 @@ dependencies = [
  "hydroflow_lang",
  "hydroflow_macro",
  "instant",
- "itertools",
+ "itertools 0.10.5",
  "lattices",
  "pusherator",
  "ref-cast",
@@ -1309,7 +1312,7 @@ dependencies = [
  "auto_impl",
  "clap 4.5.4",
  "data-encoding",
- "itertools",
+ "itertools 0.10.5",
  "prettyplease",
  "proc-macro2",
  "quote",
@@ -1327,7 +1330,7 @@ version = "0.6.0"
 source = "git+https://github.com/hydro-project/hydroflow#70d420a870a7977a444236d3912da406448cdc1b"
 dependencies = [
  "hydroflow_lang",
- "itertools",
+ "itertools 0.10.5",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -1460,6 +1463,15 @@ name = "itertools"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
 dependencies = [
  "either",
 ]

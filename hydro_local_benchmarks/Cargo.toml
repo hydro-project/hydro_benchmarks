@@ -16,3 +16,11 @@ hydroflow_base = { path = "../hydroflow_base"}
 [[bench]]
 name = "kmeans"
 harness = false
+
+[[bench]]
+name = "fusion"
+harness = false
+
+[[bench]]
+name = "matrix_vector"
+harness = false
