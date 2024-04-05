@@ -31,6 +31,14 @@ fn transpose_rows_to_cols(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     cols
 }
 
+fn to_fixed_array(rows: &Vec<Vec<f64>>) -> Vec<[f64; 100]> {
+    rows.iter().map(|row| {
+        let mut arr = [0.0; 100];
+        arr.iter_mut().zip(row.iter()).for_each(|(a, b)| *a = *b);
+        arr
+    }).collect()
+}
+
 fn matrix_vector_benchmark(c: &mut Criterion) {
     let dimensions = 100;
     let num_rows = 1000;
@@ -41,11 +49,6 @@ fn matrix_vector_benchmark(c: &mut Criterion) {
 
     c.bench_function("matrix_vector_multiply_row_major_loop", |b| {
         b.iter_batched(|| (rows.clone(), y[0].clone()), |(rows, y)| matrix_vector_multiply_row_major_loop(black_box(&rows), black_box(&y)), criterion::BatchSize::SmallInput)
-    });
-
-    c.bench_function("matrix_vector_multiply_column_major_loop", |b| {
-        //b.iter(|| matrix_vector_multiply_column_major_loop(black_box(&cols), black_box(&y[0])))
-        b.iter_batched(|| (cols.clone(), y.clone()), |(cols, y)| matrix_vector_multiply_column_major_loop(black_box(&cols), black_box(&y[0])), criterion::BatchSize::SmallInput)
     });
 
     c.bench_function("matrix_vector_multiply_row_major_iterators", |b| {
@@ -64,9 +67,26 @@ fn matrix_vector_benchmark(c: &mut Criterion) {
     c.bench_function("hf::matrix_vector_multiply_column_major_iterators_unpacked_index", |b| {
         b.iter_batched(|| (cols.clone(), y[0].clone()), |(cols, y)| hf::matrix_vector_multiply_column_major_iterators_unpacked_index(black_box(cols), black_box(y)), criterion::BatchSize::SmallInput)
     });
+
+    c.bench_function("matrix_vector_multiply_column_major_loop", |b| {
+        b.iter_batched(|| (cols.clone(), y.clone()), |(cols, y)| matrix_vector_multiply_column_major_loop(black_box(&cols), black_box(&y[0])), criterion::BatchSize::SmallInput)
+    });
     
     c.bench_function("hf::matrix_vector_multiply_column_major_iterators_unpacked_zip", |b| {
         b.iter_batched(|| (cols.clone(), y[0].clone()), |(cols, y)| hf::matrix_vector_multiply_column_major_iterators_unpacked_zip(black_box(cols), black_box(y)), criterion::BatchSize::SmallInput)
+    });
+
+    c.bench_function("matrix_vector_multiply_column_major_loop_fixed", |b| {
+        let cols = to_fixed_array(&cols);
+        let y = to_fixed_array(&y);
+
+        b.iter_batched(|| (cols.clone(), y.clone()), |(cols, y)| matrix_vector_multiply_column_major_loop_fixed(black_box(&cols), black_box(y[0])), criterion::BatchSize::SmallInput)
+    });
+
+    c.bench_function("hf::matrix_vector_multiply_column_major_iterators_unpacked_zip_fixed", |b| {
+        let cols = to_fixed_array(&cols);
+        let y = to_fixed_array(&y);
+        b.iter_batched(|| (cols.clone(), y[0].clone()), |(cols, y)| hf::matrix_vector_multiply_column_major_iterators_unpacked_zip_fixed(black_box(cols), black_box(y)), criterion::BatchSize::SmallInput)
     });
 }
 

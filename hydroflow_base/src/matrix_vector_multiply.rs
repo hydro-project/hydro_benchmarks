@@ -135,6 +135,58 @@ pub fn matrix_vector_multiply_column_major_iterators_unpacked_zip(columns: Vec<V
     return res[0].clone();
 }
 
+pub fn matrix_vector_multiply_column_major_iterators_unpacked_zip_fixed(columns: Vec<[f64; 100]>, vector: [f64; 100]) -> Vec<f64> {
+
+    //let n = columns.len();
+    let m = columns[0].len();
+    
+    let (output_send, output_recv) = hydroflow::util::unbounded_channel::<Vec<f64>>();
+
+    let mut flow = hydroflow_syntax! {
+        // Inputs
+        columns = source_iter(columns);
+        vector = source_iter(vector);
+
+        // Combine columns and vector elements
+        columns -> [0]columns_vector;
+        vector -> [1]columns_vector;
+        columns_vector = zip() -> flat_map(|(column, y_j)| {
+            column.into_iter()
+                .map(move |x_ij| (x_ij, y_j))
+        });
+        
+        result = columns_vector
+            //-> inspect(|x| println!("Columns vector: {:?}", x))
+            -> map(|(x_ij, y_j)| x_ij * y_j)
+            -> enumerate()
+            -> map(|(index_flat, x)| {
+                // Recompute the i and j index for x from the flat index
+                let i = index_flat % m;
+                (i, x)
+            })
+            -> reduce_keyed(|acc: &mut f64, x| {
+                *acc += x;
+            })
+            //-> inspect(|x| println!("Result: {:?}", x))
+            -> sort_by_key(|(i, _)| i)
+            -> map(|(_, x)| x)
+            -> fold(Vec::<f64>::new, |acc, x| {
+                acc.push(x);
+            });
+
+        result
+            -> for_each(|x| output_send.send(x).unwrap());
+
+    };
+
+    flow.run_available();
+    let res = hydroflow::util::collect_ready::<Vec<Vec<f64>>,_>(output_recv);
+
+    assert!(res.len() == 1);
+
+    return res[0].clone();
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -26,6 +26,21 @@ pub fn matrix_vector_multiply_column_major_loop(matrix_columns: &[Vec<f64>], vec
     result
 }
 
+pub fn matrix_vector_multiply_column_major_loop_fixed(matrix_columns: &[[f64;100]], vector: [f64;100]) -> Vec<f64> {
+    //let m = matrix_columns[0].len();
+    const M: usize = 100;
+    let n = matrix_columns.len();
+    let mut result = [0.0; 100];
+
+    for i in 0..M {
+        for j in 0..n {
+            result[i] += matrix_columns[j][i] * vector[j];
+        }
+    }
+
+    result.to_vec()
+}
+
 pub fn matrix_vector_multiply_row_major_iterators(matrix_rows: &[Vec<f64>], vector: &[f64]) -> Vec<f64> {
     matrix_rows.iter().map(|row| row.iter().zip(vector.iter()).map(|(a, b)| a * b).sum()).collect()
 }
@@ -74,6 +89,21 @@ mod tests {
         let expected_result = vec![14.0, 32.0, 50.0];
         assert_eq!(
             matrix_vector_multiply_column_major_loop(&matrix_columns, &vector),
+            expected_result
+        );
+    }
+
+    #[test]
+    fn test_matrix_vector_multiply_column_major_loops_fixed() {
+        let matrix_columns = [
+            [1.0; 100],
+            [1.0; 100],
+            [1.0; 100],
+        ];
+        let vector = [1.0; 100];
+        let expected_result = vec![3.0; 100];
+        assert_eq!(
+            matrix_vector_multiply_column_major_loop_fixed(&matrix_columns, vector),
             expected_result
         );
     }
