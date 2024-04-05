@@ -5,7 +5,7 @@ use base::point::*;
 
 pub fn kmeans_hf(points: Vec<Point>, k: usize, _max_iterations: usize, tolerance: f64) -> Vec<usize> {
 
-    const MAX_ITERATIONS: i32 = 1;
+    const MAX_ITERATIONS: i32 = 100;
 
     //println!("Running kmeans_hf with k = {}, tolerance = {}", k, tolerance);
 
