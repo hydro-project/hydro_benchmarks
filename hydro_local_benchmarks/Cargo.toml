@@ -24,3 +24,7 @@ harness = false
 [[bench]]
 name = "matrix_vector"
 harness = false
+
+[[bench]]
+name = "vectorized_sum"
+harness = false
