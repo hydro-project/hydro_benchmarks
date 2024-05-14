@@ -6,7 +6,7 @@ edition = "2021"
 
 [lib]
 proc-macro = true
-path = "src/lib.rs"
+path = "../flow/src/lib.rs"
 
 [features]
 default = ["macro"]
@@ -17,6 +17,9 @@ hydroflow_plus = { git = "https://github.com/hydro-project/hydroflow.git" }
 tokio = { version = "1.16", features = [ "full" ] }
 stageleft = { git = "https://github.com/hydro-project/hydroflow.git" }
 hydroflow_plus_cli_integration = { git = "https://github.com/hydro-project/hydroflow.git" }
+# XXX: Need to add dependencies here as well?
+chrono = { version = "0.4.20", features = [ "serde" ], default-features = true }
+base = {path = "../base"}
 
 [build-dependencies]
 stageleft_tool = { git = "https://github.com/hydro-project/hydroflow.git" }

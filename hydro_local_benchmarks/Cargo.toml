@@ -28,3 +28,7 @@ harness = false
 [[bench]]
 name = "vectorized_sum"
 harness = false
+
+[[bench]]
+name = "tpch"
+harness = false

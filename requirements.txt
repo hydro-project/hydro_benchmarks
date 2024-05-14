@@ -1,0 +1,5 @@
+duckdb
+jupysql
+pandas
+matplotlib
+duckdb-engine
