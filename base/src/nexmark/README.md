@@ -1,0 +1,2 @@
+Original benchmark: https://datalab.cs.pdx.edu/niagara/pstream/nexmark.pdf
+Baseline: https://hpi.de/rabl/publications/Document/puma-rabl/mod0513-grulichA-hm.pdf/981eadf59e5f3a27c40c54228c90b7e0.html?tx_extbibsonomycsl_publicationlist%5Baction%5D=view&tx_extbibsonomycsl_publicationlist%5Bpreview%5D=large&cHash=4caa993397abe8edfc23166e187545d0
