@@ -11,12 +11,17 @@ serde = { version = "1", features = [ "derive" ] }
 chrono = { version = "0.4.20", features = [ "serde" ], default-features = true }
 base = {path="../base"}
 tokio = { version = "1.16", features = [ "full" ] }
+saffron = "0.1.0"
+criterion = { version = "0.5.1"}
 
 [dev-dependencies]
-#criterion = { version = "0.4"}
 #rand = { version = "0.8.5"}
 tokio = { version = "1.16", features = [ "full", "test-util" ] }
 
 #[[bench]]
 #name = "kmeans_baseline"
 #harness = false
+
+[[bench]]
+name = "byname"
+harness = false
