@@ -1,10 +1,10 @@
 [workspace]
 members = [
-  "flow",
-  "flow_macro",
-  "base",
+  #"flow",
+  #"flow_macro",
+  #"base",
   "hydroflow_base",
-  "hydro_local_benchmarks"
+  #"hydro_local_benchmarks"
 ]
 
 resolver = "2"
